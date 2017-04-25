@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lecture09-notification-settings.iml" filepath="$PROJECT_DIR$/lecture09-notification-settings.iml" />
       <module fileurl="file://$PROJECT_DIR$/lecture09-notifications-settings.iml" filepath="$PROJECT_DIR$/lecture09-notifications-settings.iml" />
     </modules>
   </component>

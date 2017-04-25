@@ -10,14 +10,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="edu.uw.notsetdemo.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.uw.notsetdemo.SecondActivity" android:parentActivityName="edu.uw.notsetdemo.MainActivity">
+        <activity
+            android:name=".SecondActivity"
+            android:parentActivityName=".MainActivity">
+
             <!-- for action bar back -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -25,14 +28,16 @@
 
             <!-- respond to dial intents! -->
             <intent-filter>
-                <action android:name="android.intent.action.DIAL"/>
+                <action android:name="android.intent.action.DIAL" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="tel" />
             </intent-filter>
         </activity>
 
         <!-- listen for battery events -->
-        <receiver android:name="edu.uw.notsetdemo.MyReceiver">
+        <receiver android:name=".MyReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -43,6 +48,7 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

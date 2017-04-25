@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="shouldNotify"
+        android:title="Show notifications"
+        android:defaultValue="true"
+        />
+    <EditTextPreference
+        android:key="prefText"
+        android:title="Text to Show"
+        android:defaultValue="true"
+        />
+
+</PreferenceScreen>

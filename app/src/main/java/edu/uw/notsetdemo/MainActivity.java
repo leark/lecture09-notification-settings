@@ -1,12 +1,21 @@
 package edu.uw.notsetdemo;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
@@ -23,8 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SMS_SENT_CODE = 2;
+    private static final int NOTIFY_CODE = 3;
+
+    private static final int TEST_NOTIFICATION_ID = 1;
 
     public static final String ACTION_SMS_STATUS = "edu.uw.intentdemo.ACTION_SMS_STATUS";
+    private int notificationCount = 0;
 
 
     @Override
@@ -44,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences prefs = getSharedPreferences("TestPrefs", MODE_PRIVATE);
+        this.notificationCount = prefs.getInt("notifications", 0);
+
         //dynamic BroadcastReceiver registry
 //        IntentFilter batteryFilter = new IntentFilter();
 //        batteryFilter.addAction(Intent.ACTION_BATTERY_LOW);
@@ -52,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
 //        batteryFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
 //        this.registerReceiver(new MyReceiver(), batteryFilter);
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences prefs = getSharedPreferences("TestPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("notifications", notificationCount);
+        editor.commit();
     }
 
     public void callNumber(View v) {
@@ -103,7 +128,38 @@ public class MainActivity extends AppCompatActivity {
     public void notify(View v){
         Log.v(TAG, "Notify button pressed");
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("shouldNotify", false) == true) {
 
+            notificationCount++;
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("My notification")
+                    .setContentText("Hello world!");
+            // Make the intent
+            Intent intent = new Intent(this, SecondActivity.class);
+
+            // for building the artificial history
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(SecondActivity.class);
+            stackBuilder.addNextIntent(intent);
+
+            PendingIntent pendingIntent = stackBuilder.getPendingIntent(NOTIFY_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
+            // Done making intent
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("Clicky Clicky")
+                    .setContentText("You clicked this " + notificationCount + " times");
+            builder.setContentIntent(pendingIntent);
+            builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+            builder.setVibrate(new long[]{0, 100, 200, 300, 400, 500});
+            builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+
+            NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notification = builder.build();
+            notifyManager.notify(TEST_NOTIFICATION_ID, notification);
+        }
     }
 
     @Override
@@ -121,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_item_prefs:
                 Log.v(TAG, "Settings button pressed");
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_item_click:
                 Log.v(TAG, "Extra button pressed");

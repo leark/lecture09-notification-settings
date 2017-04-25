@@ -12,7 +12,6 @@ import android.widget.Toast;
  */
 public class MyReceiver extends BroadcastReceiver {
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
